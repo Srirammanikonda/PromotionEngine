@@ -15,6 +15,11 @@ import com.PromEngine.model.PromotionType;
 import com.PromEngine.repository.ActivePromotionsRepository;
 import com.PromEngine.repository.ProductRepository;
 
+/**
+ * 
+ * This method receives the request from the controller and helps in calculating the final cart price.
+ *
+ */
 
 @Service
 @Transactional
@@ -26,6 +31,12 @@ public class CalculateCartPriceService {
     @Autowired
     ActivePromotionsRepository activePromotionsRepository;
     
+    /**
+     * Method accepts list of cart items and processes the request to calculate cart price
+     * 
+     * @param List<CartItems>
+     * @return
+     */
     public double calculateCartPrice(List<CartItems> cartItems) {
     	cartItems.forEach(ci -> {
             String itemName = ci.getItemName();
@@ -45,6 +56,16 @@ public class CalculateCartPriceService {
     	return finalPrice;
     }
     
+    /**
+     * Method which calculates price for Multi-item carts
+     * 
+     * @param quantity
+     * @param itemName
+     * @param PromotionName
+     * @param promoOnNumberOfItems
+     * @return
+     */
+     
     private double calculateProductForMultiple(int quantity, String itemName, String PromotionName,
             int promoOnNumberOfItems) {
         Optional<ActivePromotions> activePromotion = activePromotionsRepository.findByPromotionName(PromotionName);
@@ -65,6 +86,12 @@ public class CalculateCartPriceService {
         return priceOfItem;
     }
     
+    /**
+     * Method which calculates price for Combination of items in cart
+     * 
+     * @param cartItems
+     * @return
+     */
     private double calculateComboProductsPricing(List<CartItems> cartItems) {
     	List<ActivePromotions> activePromotions = activePromotionsRepository.findAll();
     	List<ActivePromotions> comboPromos = activePromotions.stream()

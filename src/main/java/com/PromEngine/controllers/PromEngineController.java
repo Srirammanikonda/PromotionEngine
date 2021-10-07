@@ -19,6 +19,12 @@ public class PromEngineController {
 	@Autowired
 	CalculateCartPriceService calculateCartPriceService;
 	
+	/**
+	 * This method receives cart items and their quantity as input and processes the data to calculate final price.
+	 * 
+	 * @param List<CartItems>	List of items in the cart along with their quantity 
+	 * @return					The final cart price to the user
+	 */
 	@RequestMapping(value="/calculateFinalPrice", method=RequestMethod.POST)
 	public ResponseEntity<String> calculateFinalPrice(@RequestBody List<CartItems> cartItems) {
 		Double discountedPrice = calculateCartPriceService.calculateCartPrice(cartItems);

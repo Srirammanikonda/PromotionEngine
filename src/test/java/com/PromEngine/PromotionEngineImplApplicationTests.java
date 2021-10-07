@@ -15,6 +15,11 @@ import com.PromEngine.model.CartItems;
 import com.PromEngine.model.ProductInfo;
 import com.PromEngine.repository.ProductRepository;
 
+/**
+ * 
+ * Component Test cases which touches all the flows of our code
+ *
+ */
 @SpringBootTest
 class PromotionEngineImplApplicationTests {
     @Autowired

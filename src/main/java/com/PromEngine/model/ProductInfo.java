@@ -9,6 +9,11 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * 
+ *	Product information Model class
+ */
+
 @Data
 @Entity
 @Table(name="ProductInfo")
