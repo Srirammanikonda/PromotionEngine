@@ -71,6 +71,33 @@ public class CalculateCartPriceService {
                 .filter(ap -> ap.getPromotionType().equals(PromotionType.ComboProductPromotion))
                 .collect(Collectors.toList());
         double priceOfItem = 0;
+        
+        for(ActivePromotions activePromotion:comboPromos) {
+	            
+	            List<ProductInfo> products = productRepository.findByPromoCode(activePromotion.getPromo_code());
+	            List<CartItems> ItemC = cartItems.stream().filter(ci -> ci.getItemName().equals(products.get(0).getItemName()))
+	                    .collect(Collectors.toList());
+	            List<CartItems> ItemD = cartItems.stream().filter(ci -> ci.getItemName().equals(products.get(1).getItemName()))
+	                    .collect(Collectors.toList());
+	           
+	            if (!ItemC.isEmpty() && !ItemD.isEmpty()) {
+	                if (ItemC.get(0).getQuantity() == ItemD.get(0).getQuantity()) {
+	                    priceOfItem = ItemC.get(0).getQuantity() * activePromotion.getEffectivePrice();
+	                } else if (ItemC.get(0).getQuantity() < ItemD.get(0).getQuantity()) {
+	                    int remainingOfD = ItemD.get(0).getQuantity() - ItemC.get(0).getQuantity();
+	                    priceOfItem = ItemC.get(0).getQuantity() * activePromotion.getEffectivePrice();
+	                    priceOfItem = priceOfItem + (products.get(1).getUnitPrice() * remainingOfD);
+	                } else if (ItemD.get(0).getQuantity() < ItemC.get(0).getQuantity()) {
+	                    int remainingOfC = ItemC.get(0).getQuantity() - ItemD.get(0).getQuantity();
+	                    priceOfItem = ItemD.get(0).getQuantity() * activePromotion.getEffectivePrice();
+	                    priceOfItem = priceOfItem + (products.get(0).getUnitPrice() * remainingOfC);
+	                }
+	            } else if (!ItemC.isEmpty()) {
+	                priceOfItem = ItemC.get(0).getQuantity() * (products.get(0).getUnitPrice());
+	            } else if (!ItemD.isEmpty()) {
+	                priceOfItem = ItemD.get(0).getQuantity() * (products.get(1).getUnitPrice());
+	            }
+	        }
         return priceOfItem;
     }
 }
