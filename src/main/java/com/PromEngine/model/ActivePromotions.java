@@ -25,6 +25,9 @@ public class ActivePromotions {
 	@Column(name="EffectivePrice")
 	private int effectivePrice;
 	
+	@Column(name="PromotionType")
+	private PromotionType promotionType;
+	
     @Column(name="PromoQuantityNum")
 	private int promotionQuantityNumber;
 	

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.PromEngine.model.ActivePromotions;
 import com.PromEngine.model.CartItems;
 import com.PromEngine.model.ProductInfo;
+import com.PromEngine.model.PromotionType;
 import com.PromEngine.repository.ActivePromotionsRepository;
 import com.PromEngine.repository.ProductRepository;
 
@@ -32,8 +33,22 @@ public class CalculateCartPriceService {
             
             Optional<ActivePromotions> activePromotions = activePromotionsRepository
                     .findById(product.get().getPromoCode());
+            
+            if (activePromotions.get().getPromotionType().equals(PromotionType.MultipleQuantityPromotion)) {
+                ci.setTotalAmount(this.calculateProductForMultiple(quantity, itemName,
+                		activePromotions.get().getPromotionName(), activePromotions.get().getPromotionQuantityNumber()));
+            }
     	});
-    	double finalPrice = 0;
+    	double finalPrice = cartItems.stream().mapToDouble(ci -> ci.getTotalAmount()).sum();
     	return finalPrice;
+    }
+    
+    private double calculateProductForMultiple(int quantity, String itemName, String PromotionName,
+            int promoOnNumberOfItems) {
+    	Optional<ActivePromotions> activePromotion = activePromotionsRepository.findByPromotionName(PromotionName);
+        Optional<ProductInfo> product = productRepository.findByItemName(itemName);
+        
+    	double priceOfItem = 0;
+    	return priceOfItem;
     }
 }
